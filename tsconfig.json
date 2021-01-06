@@ -1,17 +1,17 @@
 {
   "compilerOptions": {
-    "target": "es2019", 
+    "outDir": "dist",
     "module": "commonjs",
-    "lib": [
-      "es6"
-    ], 
-    "allowJs": true, 
-    "outDir": "./dist", 
-    "rootDir": "./src", 
-    "removeComments": true, 
-    "strict": true,
-    "esModuleInterop": true, 
-    "skipLibCheck": true, 
-    "forceConsistentCasingInFileNames": true
-  }
+    "target": "es2019",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "rootDirs": ["src", "tests"],
+    "baseUrl": "src",
+    "paths": {
+      "@/tests/*": ["../tests/*"],
+      "@/*": ["*"]
+    }
+  },
+  "include": ["src", "tests"],
+  "exclude": []
 }
