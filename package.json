@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --no-notify src/index.ts",
     "test:staged": "jest --passWithNoTests",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests --watch"
   },
   "devDependencies": {
     "@types/jest": "^26.0.19",
