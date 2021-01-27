@@ -16,5 +16,14 @@ export const MongoHelper = {
 
   getCollection (name:string): Collection {
     return this.client.db().collection(name)
+  },
+
+  // Change the "_id" returned from Mongodb to "id", understood by models
+  map (data: any): any {
+    const { _id, ...dataWithNoId } = data
+    return {
+      id: _id,
+      ...dataWithNoId
+    }
   }
 }
