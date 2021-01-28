@@ -2,7 +2,21 @@ import { AccountEntity } from '../../../domain/entities/account-entity'
 import { AddAccountModel, Encrypter, AddAccountRepository } from './db-account-protocols'
 import { DbAddAccount } from './db-add-account'
 
-const makeEncrypter = ():Encrypter => {
+const makeFakeAddAccountModel = (): AddAccountModel => (
+  {
+    name: 'valid_name',
+    email: 'valid_email',
+    password: 'valid_password'
+  }
+)
+const makeFakeAccountEntity = (): AccountEntity => ({
+  id: 'any_id',
+  email: 'any_email@gmail.com',
+  name: 'any_name',
+  password: 'any_password'
+})
+
+const makeEncrypter = (): Encrypter => {
   class EncrypterStub implements Encrypter {
     async encrypt (value: string): Promise<string> {
       return new Promise(resolve => resolve('hashed_password'))
@@ -11,21 +25,16 @@ const makeEncrypter = ():Encrypter => {
   return new EncrypterStub()
 }
 
-const makeAddAccountRepositoryStub = ():AddAccountRepository => {
+const makeAddAccountRepositoryStub = (): AddAccountRepository => {
   class AddAccountRepositoryStub implements AddAccountRepository {
     async add (account: AddAccountModel): Promise<AccountEntity> {
-      return new Promise(resolve => resolve({
-        id: 'valid_id',
-        name: 'valid_name',
-        email: 'valid_email',
-        password: 'hashed_password'
-      }))
+      return new Promise(resolve => resolve(makeFakeAccountEntity()))
     }
   }
   return new AddAccountRepositoryStub()
 }
 
-interface SutTypes{
+interface SutTypes {
   sut: DbAddAccount,
   encrypterStub: Encrypter,
   addAccountRepositoryStub: AddAccountRepository
@@ -46,12 +55,8 @@ describe('DbAddAccount Usecase', () => {
   it('Should call Encrypter with correct password', async () => {
     const { sut, encrypterStub } = makeSut()
     const encrypterSpy = jest.spyOn(encrypterStub, 'encrypt')
-    const accountData: AddAccountModel = {
-      name: 'valid_name',
-      email: 'valid_email',
-      password: 'valid_password'
-    }
-    await sut.add(accountData)
+
+    await sut.add(makeFakeAddAccountModel())
     expect(encrypterSpy).toHaveBeenCalledWith('valid_password')
   })
 
@@ -60,24 +65,14 @@ describe('DbAddAccount Usecase', () => {
     jest.spyOn(encrypterStub, 'encrypt')
       .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
 
-    const accountData: AddAccountModel = {
-      name: 'valid_name',
-      email: 'valid_email',
-      password: 'valid_password'
-    }
-    const promise = sut.add(accountData)
+    const promise = sut.add(makeFakeAddAccountModel())
     await expect(promise).rejects.toThrow()
   })
 
   it('Should call AddAccountRepository with correct values', async () => {
     const { sut, addAccountRepositoryStub } = makeSut()
     const addSpy = jest.spyOn(addAccountRepositoryStub, 'add')
-    const accountData: AddAccountModel = {
-      name: 'valid_name',
-      email: 'valid_email',
-      password: 'valid_password'
-    }
-    await sut.add(accountData)
+    await sut.add(makeFakeAddAccountModel())
     expect(addSpy).toHaveBeenCalledWith({
       name: 'valid_name',
       email: 'valid_email',
@@ -90,28 +85,13 @@ describe('DbAddAccount Usecase', () => {
     jest.spyOn(addAccountRepositoryStub, 'add')
       .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
 
-    const accountData: AddAccountModel = {
-      name: 'valid_name',
-      email: 'valid_email',
-      password: 'valid_password'
-    }
-    const promise = sut.add(accountData)
+    const promise = sut.add(makeFakeAddAccountModel())
     await expect(promise).rejects.toThrow()
   })
 
   it('Should return an AccountEntity on success', async () => {
     const { sut } = makeSut()
-    const accountData: AddAccountModel = {
-      name: 'valid_name',
-      email: 'valid_email',
-      password: 'valid_password'
-    }
-    const accountEntity = await sut.add(accountData)
-    expect(accountEntity).toEqual({
-      id: 'valid_id',
-      name: 'valid_name',
-      email: 'valid_email',
-      password: 'hashed_password'
-    })
+    const accountEntity = await sut.add(makeFakeAddAccountModel())
+    expect(accountEntity).toEqual(makeFakeAccountEntity())
   })
 })
