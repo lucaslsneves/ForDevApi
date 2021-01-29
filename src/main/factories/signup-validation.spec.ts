@@ -1,6 +1,7 @@
 import { CompareFieldsValidation } from '../../presentation/helpers/validators/compare-fields-validation'
 import { EmailValidation } from '../../presentation/helpers/validators/email-validation'
 import { RequiredFieldValidation } from '../../presentation/helpers/validators/required-field-validation'
+import { Validation } from '../../presentation/helpers/validators/validation'
 import { ValidationComposite } from '../../presentation/helpers/validators/validation-composite'
 import { EmailValidator } from '../../presentation/protocols/email-validator'
 import { makeSignUpValidation } from './signup-validation'
@@ -17,15 +18,18 @@ const makeEmailValidator = (): EmailValidator => {
 }
 
 describe('SignUpValidation Factory', () => {
-  it('Should call ValidationComposite with all validations ', () => {
+  test('Should call ValidationComposite with correct validations', () => {
     makeSignUpValidation()
-    expect(ValidationComposite).toHaveBeenCalledWith([
-      new RequiredFieldValidation('name'),
-      new RequiredFieldValidation('email'),
-      new RequiredFieldValidation('password'),
-      new RequiredFieldValidation('passwordConfirmation'),
-      new CompareFieldsValidation('password', 'passwordConfirmation'),
-      new EmailValidation('email', makeEmailValidator())
-    ])
+    const validations: Validation[] = []
+    for (const field of ['name', 'email', 'password', 'passwordConfirmation']) {
+      validations.push(new RequiredFieldValidation(field))
+    }
+
+    validations.push(
+      new CompareFieldsValidation('password', 'passwordConfirmation')
+    )
+    validations.push(new EmailValidation('email', makeEmailValidator()))
+
+    expect(ValidationComposite).toHaveBeenCalledWith(validations)
   })
 })
