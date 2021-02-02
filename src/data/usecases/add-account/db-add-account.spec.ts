@@ -55,7 +55,6 @@ describe('DbAddAccount Usecase', () => {
   it('Should call Hasher with correct password', async () => {
     const { sut, hasherStub } = makeSut()
     const hasherSpy = jest.spyOn(hasherStub, 'hash')
-
     await sut.add(makeFakeAddAccountModel())
     expect(hasherSpy).toHaveBeenCalledWith('valid_password')
   })
