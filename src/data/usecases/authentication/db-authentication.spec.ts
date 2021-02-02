@@ -127,4 +127,11 @@ describe('DbAuthentication UseCase', () => {
     const promise = sut.auth(makeAuthenticationModel())
     expect(promise).rejects.toThrow()
   })
+
+  it('Should return an accessToken on success', async () => {
+    const { sut } = makeSut()
+
+    const accessToken = await sut.auth(makeAuthenticationModel())
+    expect(accessToken).toBe('valid_token')
+  })
 })
