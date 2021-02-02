@@ -3,6 +3,7 @@ import { MissingParamError } from '../../errors'
 import { HttpRequest, Authentication, Validation } from './login-protocols'
 import { LoginController } from './login'
 import { unauthorized, ok, badRequest, serverError } from '../../helpers/http-helpers'
+import { AuthenticationModel } from '../../../domain/usecases/authentication'
 
 const makeValidationStub = (): Validation => {
   class ValidationStub implements Validation {
@@ -14,7 +15,7 @@ const makeValidationStub = (): Validation => {
 }
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (email: string, password:string): Promise<string> {
+    async auth (authenticationModel:AuthenticationModel): Promise<string> {
       return 'any_token'
     }
   }
@@ -52,8 +53,10 @@ describe('Login Controller', () => {
     const isValidSpy = jest.spyOn(authenticationStub, 'auth')
     await sut.handle(makeHttpRequest())
     expect(isValidSpy).toHaveBeenCalledWith(
-      makeHttpRequest().body.email,
-      makeHttpRequest().body.password
+      {
+        email: makeHttpRequest().body.email,
+        password: makeHttpRequest().body.password
+      }
     )
   })
 
