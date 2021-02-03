@@ -24,6 +24,7 @@
         "@typescript-eslint/no-misused-promises": "off",
         "@typescript-eslint/no-namespace": "off",
         "import/export": "off",
-        "no-unreachable":"off"
+        "no-unreachable":"off",
+        "no-useless-constructor": "off"
     }
 }
