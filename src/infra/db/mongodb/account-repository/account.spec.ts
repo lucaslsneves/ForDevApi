@@ -1,5 +1,8 @@
+import { Collection } from 'mongodb'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { AccountMongoRepository } from './account'
+
+let accountCollection: Collection
 
 describe('Account Mongo Repository', () => {
   beforeAll(async () => {
@@ -7,7 +10,7 @@ describe('Account Mongo Repository', () => {
   })
 
   beforeEach(async () => {
-    const accountCollection = await MongoHelper.getCollection('accounts')
+    accountCollection = await MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
 
@@ -17,8 +20,9 @@ describe('Account Mongo Repository', () => {
 
   const makeSut = (): AccountMongoRepository => new AccountMongoRepository()
 
-  it('Should return an account on success', async () => {
+  it('Should return an account on add success', async () => {
     const sut = makeSut()
+
     const accountEntity = await sut.add({
       email: 'any_email',
       name: 'any_name',
@@ -30,5 +34,27 @@ describe('Account Mongo Repository', () => {
     expect(accountEntity.name).toBe('any_name')
     expect(accountEntity.email).toBe('any_email')
     expect(accountEntity.password).toBe('any_password')
+  })
+
+  it('Should return an account on loadByEmail success', async () => {
+    const sut = makeSut()
+    await accountCollection.insertOne({
+      email: 'any_email',
+      name: 'any_name',
+      password: 'any_password'
+    })
+    const accountEntity = await sut.loadByEmail('any_email')
+    expect(accountEntity).toBeTruthy()
+    expect(accountEntity.id).toBeTruthy()
+    console.log(accountEntity.id)
+    expect(accountEntity.name).toBe('any_name')
+    expect(accountEntity.email).toBe('any_email')
+    expect(accountEntity.password).toBe('any_password')
+  })
+
+  it('Should return niull on loadByEmail fails', async () => {
+    const sut = makeSut()
+    const accountEntity = await sut.loadByEmail('any_email')
+    expect(accountEntity).toBeFalsy()
   })
 })
