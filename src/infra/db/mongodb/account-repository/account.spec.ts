@@ -46,7 +46,6 @@ describe('Account Mongo Repository', () => {
     const accountEntity = await sut.loadByEmail('any_email')
     expect(accountEntity).toBeTruthy()
     expect(accountEntity.id).toBeTruthy()
-    console.log(accountEntity.id)
     expect(accountEntity.name).toBe('any_name')
     expect(accountEntity.email).toBe('any_email')
     expect(accountEntity.password).toBe('any_password')
@@ -56,5 +55,29 @@ describe('Account Mongo Repository', () => {
     const sut = makeSut()
     const accountEntity = await sut.loadByEmail('any_email')
     expect(accountEntity).toBeFalsy()
+  })
+
+  it('Should update the account accessToken on updateAccessToken success', async () => {
+    const sut = makeSut()
+    const res = await accountCollection.insertOne({
+      email: 'any_email',
+      name: 'any_name',
+      password: 'any_password'
+    })
+    const accountWithoutToken = res.ops[0]
+
+    expect(accountWithoutToken).toBeTruthy()
+    expect(accountWithoutToken._id).toBeTruthy()
+    expect(accountWithoutToken.name).toBe('any_name')
+    expect(accountWithoutToken.email).toBe('any_email')
+    expect(accountWithoutToken.password).toBe('any_password')
+
+    expect(accountWithoutToken.accessToken).toBeFalsy()
+
+    await sut.updateAccessToken(accountWithoutToken._id, 'any_token')
+
+    const account = await accountCollection.findOne({ _id: accountWithoutToken._id })
+
+    expect(account.accessToken).toBe('any_token')
   })
 })
