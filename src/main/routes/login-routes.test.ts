@@ -50,7 +50,7 @@ describe('Login Routes', () => {
         .expect(200)
     })
 
-    it('Should return 401 if email is invalid', async () => {
+    it('Should return 401 if email is incorrect', async () => {
       const password = await hash('123', 12)
       await accountCollection.insertOne({
         name: 'Lucas',
@@ -64,6 +64,16 @@ describe('Login Routes', () => {
           password: '123'
         })
         .expect(401)
+    })
+
+    it('Should return 400 if email is invalid', async () => {
+      await request(app)
+        .post('/api/login')
+        .send({
+          email: 'invalid_email',
+          password: '123'
+        })
+        .expect(400)
     })
 
     it('Should return 401 if password is invalid', async () => {
@@ -96,7 +106,6 @@ describe('Login Routes', () => {
         .post('/api/login')
         .send({
           email: 'any_email@gmail.com'
-
         })
         .expect(400)
     })
