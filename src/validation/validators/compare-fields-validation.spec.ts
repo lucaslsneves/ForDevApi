@@ -1,6 +1,5 @@
-import { InvalidParamError } from '../../errors'
+import { InvalidParamError } from '../../presentation/errors'
 import { CompareFieldsValidation } from './compare-fields-validation'
-
 describe('RequiredField Validation', () => {
   it('Should return an InvalidParamError if validation fails', () => {
     const sut = new CompareFieldsValidation('any_field', 'other_field')
