@@ -5,7 +5,7 @@
   "author": "Lucas Luz <lucasluzthatsme@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node dist/main/server.js ",
+    "start": "node dist/main/server.js",
     "build": "rimraf dist && tsc",
     "up": "yarn run build && docker-compose up -d",
     "stop": "docker-compose down",
