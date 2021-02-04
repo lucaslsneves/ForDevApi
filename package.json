@@ -5,17 +5,17 @@
   "author": "Lucas Luz <lucasluzthatsme@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "start:live": "nodemon -L --watch ./dist dist/main/server.js",
     "start": "node dist/main/server.js",
     "build": "rimraf dist && tsc",
-    "up": "yarn run build && docker-compose up",
-    "stop": "docker-compose down",
+    "up": "yarn run build && docker-compose up -d",
+    "down": "docker-compose down",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests --runInBand",
     "test:unit": "yarn test -- --watch -c jest-unit-config.js",
     "test:integration": "yarn test -- --watch -c jest-integration-config.js",
     "test:staged": "yarn test -- --findRelatedTests",
     "test:ci": "yarn test -- --coverage"
-    
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^1.2.3",
@@ -49,6 +49,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.3",
+    "nodemon": "^2.0.7",
     "validator": "^13.5.2"
   },
   "engines": {
