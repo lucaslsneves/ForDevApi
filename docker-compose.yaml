@@ -13,7 +13,7 @@ services:
     restart: always
     image: node:12
     working_dir: /usr/src/ForDevApi
-    command: bash -c "yarn install --production && yarn start:live"
+    command: bash -c "yarn install --production && yarn start:watch"
     volumes:
       - ./dist/:/usr/src/ForDevApi/dist/
       - ./package.json:/usr/src/ForDevApi/package.json
