@@ -50,9 +50,9 @@ const makeSut = (): SutTypes => {
 describe('Login Controller', () => {
   it('Should call Authentication with correct values', async () => {
     const { sut, authenticationStub } = makeSut()
-    const isValidSpy = jest.spyOn(authenticationStub, 'auth')
+    const authSpy = jest.spyOn(authenticationStub, 'auth')
     await sut.handle(makeHttpRequest())
-    expect(isValidSpy).toHaveBeenCalledWith(
+    expect(authSpy).toHaveBeenCalledWith(
       {
         email: makeHttpRequest().body.email,
         password: makeHttpRequest().body.password
