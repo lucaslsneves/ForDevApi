@@ -91,23 +91,5 @@ describe('Login Routes', () => {
         })
         .expect(401)
     })
-
-    it('Should return 400 if email is not provided', async () => {
-      await request(app)
-        .post('/api/login')
-        .send({
-          password: 'any_password'
-        })
-        .expect(400)
-    })
-
-    it('Should return 400 if password is not provided', async () => {
-      await request(app)
-        .post('/api/login')
-        .send({
-          email: 'any_email@gmail.com'
-        })
-        .expect(400)
-    })
   })
 })
