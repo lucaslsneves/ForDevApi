@@ -11,9 +11,9 @@ services:
   api:
     container_name: api-container
     restart: always
-    build: .
-    image: for-dev-api
-    command: yarn start
+    image: node:12
+    working_dir: /usr/src/ForDevApi
+    command: bash -c "yarn install --production && yarn start"
     volumes:
       - ./dist:/usr/src/ForDevApi/dist
       - ./package.json:/usr/src/ForDevApi/package.json
