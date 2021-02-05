@@ -1,6 +1,6 @@
 
 export interface SurveyAnswers {
-  image: string
+  image?: string
   anwser: string
 }
 
