@@ -10,5 +10,5 @@ export interface AddSurveyParams {
 }
 
 export interface AddSurvey {
-   add(param: AddSurveyParams): Promise<void>
+   add(survey: AddSurveyParams): Promise<void>
 }
