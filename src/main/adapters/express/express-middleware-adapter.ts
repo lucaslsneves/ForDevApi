@@ -6,7 +6,7 @@ export const expressMiddlewareAdapter = (middleware: Middleware) => {
     const httpRequest: HttpRequest = {
       headers: req.headers
     }
-    const httpResponse:HttpResponse = await middleware.handle(httpRequest)
+    const httpResponse: HttpResponse = await middleware.handle(httpRequest)
     if (httpResponse.statusCode === 200) {
       // assign req.accountId
       Object.assign(req, httpResponse.body)
