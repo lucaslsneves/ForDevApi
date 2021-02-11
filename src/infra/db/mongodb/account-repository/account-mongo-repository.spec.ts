@@ -38,7 +38,7 @@ describe('Account Mongo Repository', () => {
     })
   })
 
-  describe('load()', () => {
+  describe('loadByEmail()', () => {
     it('Should return an account on loadByEmail success', async () => {
       const sut = makeSut()
       await accountCollection.insertOne({
@@ -84,6 +84,47 @@ describe('Account Mongo Repository', () => {
       const account = await accountCollection.findOne({ _id: accountWithoutToken._id })
 
       expect(account.accessToken).toBe('any_token')
+    })
+  })
+
+  describe('loadByToken()', () => {
+    it('Should return an account on loadByToken without role', async () => {
+      const sut = makeSut()
+      await accountCollection.insertOne({
+        email: 'any_email',
+        name: 'any_name',
+        password: 'any_password',
+        accessToken: 'any_token'
+      })
+      const accountEntity = await sut.loadByToken('any_token')
+      expect(accountEntity).toBeTruthy()
+      expect(accountEntity.id).toBeTruthy()
+      expect(accountEntity.name).toBe('any_name')
+      expect(accountEntity.email).toBe('any_email')
+      expect(accountEntity.password).toBe('any_password')
+    })
+
+    it('Should return an account on loadByToken with role', async () => {
+      const sut = makeSut()
+      await accountCollection.insertOne({
+        email: 'any_email',
+        name: 'any_name',
+        password: 'any_password',
+        accessToken: 'any_token',
+        role: 'any_role'
+      })
+      const accountEntity = await sut.loadByToken('any_token', 'any_role')
+      expect(accountEntity).toBeTruthy()
+      expect(accountEntity.id).toBeTruthy()
+      expect(accountEntity.name).toBe('any_name')
+      expect(accountEntity.email).toBe('any_email')
+      expect(accountEntity.password).toBe('any_password')
+    })
+
+    it('Should return null on loadByToken fails', async () => {
+      const sut = makeSut()
+      const accountEntity = await sut.loadByToken('any_token')
+      expect(accountEntity).toBeFalsy()
     })
   })
 })
