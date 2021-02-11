@@ -1,4 +1,3 @@
-import { } from '../add-account/db-account-protocols'
 import { Decrypter, LoadAccountByToken, LoadAccountByTokenRepository, AccountEntity } from './db-load-account-by-token-protocols'
 
 export class DbLoadAccountByToken implements LoadAccountByToken {
