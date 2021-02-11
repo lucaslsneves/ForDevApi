@@ -76,4 +76,11 @@ describe('DbLoadAccountByToken', () => {
     const account = await sut.load('any_token', 'any_role')
     expect(account).toEqual(makeAccountEntity())
   })
+
+  it('Should throws if LoadAccountByTokenRepository throws', async () => {
+    const { sut, loadAccountByTokenRepositoryStub } = makeSut()
+    jest.spyOn(loadAccountByTokenRepositoryStub, 'loadByToken').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const response = sut.load('any_token', 'any_role')
+    expect(response).rejects.toThrow()
+  })
 })
