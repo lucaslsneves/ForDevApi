@@ -1,6 +1,6 @@
 import { DbLoadSurveys } from './db-load-surveys'
 import { SurveyEntity, LoadSurveysRepository } from './db-load-surveys-protocols'
-
+import MockDate from 'mockdate'
 const makeSurveyEntities = (): SurveyEntity[] => [
   {
     id: 'any_id',
@@ -44,6 +44,13 @@ const makeSut = ():SutTypes => {
 }
 
 describe('DbLoadSurveys Usecase', () => {
+  beforeAll(() => {
+    MockDate.set(new Date())
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
   it('Should call LoadSurveysRepository', async () => {
     const { sut, loadSurveysRepositoryStub } = makeSut()
     const loadAll = jest.spyOn(loadSurveysRepositoryStub, 'loadAll')
@@ -53,8 +60,14 @@ describe('DbLoadSurveys Usecase', () => {
 
   it('Should return a surveys list on success', async () => {
     const { sut } = makeSut()
-
     const surveys = await sut.load()
     expect(surveys).toEqual(makeSurveyEntities())
+  })
+
+  it('Should throws if LoadSurveysRepository throws', async () => {
+    const { sut, loadSurveysRepositoryStub } = makeSut()
+    jest.spyOn(loadSurveysRepositoryStub, 'loadAll').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const response = sut.load()
+    expect(response).rejects.toThrow()
   })
 })
