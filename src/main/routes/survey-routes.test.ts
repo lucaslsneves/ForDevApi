@@ -76,31 +76,27 @@ describe('Survey Routes', () => {
         .expect(403)
     })
 
-    it('Should return 204 if a valid accessToken is provided', async () => {
+    it('Should return 200 on load surveys with valid accessToken', async () => {
       const res = await accountCollection.insertOne({
         name: 'any_name',
         email: 'any_email',
-        password: 'any_password',
-        role: 'admin'
+        password: 'any_password'
       })
       const id = res.ops[0]._id
       const accessToken = sign({ id }, env.jwtSecret)
       await accountCollection.updateOne({ _id: id }, { $set: { accessToken } })
+
+      await surveyCollection.insertMany([
+        {
+          question: 'any_question',
+          answers: [{ anwser: 'any_answer', image: 'any_image' }],
+          date: new Date()
+        }
+      ])
       await request(app)
-        .post('/api/surveys')
+        .get('/api/surveys')
         .set('x-access-token', accessToken)
-        .send({
-          question: 'question',
-          answers: [{
-            image: 'http://image-name.com',
-            answer: 'any_answer'
-          },
-          {
-            answer: 'any_answer'
-          }
-          ]
-        })
-        .expect(204)
+        .expect(200)
     })
   })
 })
