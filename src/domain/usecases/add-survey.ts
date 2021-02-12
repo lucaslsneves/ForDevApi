@@ -1,12 +1,9 @@
-
-export interface SurveyAnswers {
-  image?: string
-  anwser: string
-}
+import { SurveyAnswers } from '../entities/survey-entity'
 
 export interface AddSurveyParams {
   question: string
-  answers: SurveyAnswers[]
+  answers: SurveyAnswers[],
+  date: Date
 }
 
 export interface AddSurvey {

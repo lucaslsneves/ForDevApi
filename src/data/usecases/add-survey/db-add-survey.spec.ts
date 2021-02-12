@@ -1,9 +1,10 @@
 import { AddSurveyRepository, AddSurveyParams } from './db-add-survey-protocols'
 import { DbAddSurvey } from './db-add-survey'
-
+import MockDate from 'mockdate'
 const makeAddSurveyParams = (): AddSurveyParams => ({
   question: 'any_question',
-  answers: [{ image: 'any_image', anwser: 'any_answer' }]
+  answers: [{ image: 'any_image', anwser: 'any_answer' }],
+  date: new Date()
 })
 const makeAddSurveyRepositoryStub = (): AddSurveyRepository => {
   class AddSurveyRepositoryStub implements AddSurveyRepository {
@@ -29,6 +30,13 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbAddSurvey Usecase', () => {
+  beforeAll(() => {
+    MockDate.set(new Date())
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
   it('Should call AddSurveyRepository with correct values', async () => {
     const { sut, addSurveyRepositoryStub } = makeSut()
     const addSurveyRepositorySpy = jest.spyOn(addSurveyRepositoryStub, 'add')

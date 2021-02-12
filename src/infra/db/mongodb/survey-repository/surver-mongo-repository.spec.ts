@@ -24,7 +24,8 @@ describe('Survey Mongo Repository', () => {
     const sut = makeSut()
     await sut.add({
       question: 'any_question',
-      answers: [{ anwser: 'any_answer', image: 'any_image' }, { anwser: 'other_answer' }]
+      answers: [{ anwser: 'any_answer', image: 'any_image' }, { anwser: 'other_answer' }],
+      date: new Date()
     })
     const survey = await surveyCollection.findOne({ question: 'any_question' })
     expect(survey.question).toBe('any_question')
