@@ -1,4 +1,3 @@
-
 import { LoadSurveys, SurveyEntity, LoadSurveysRepository } from './db-load-surveys-protocols'
 
 export class DbLoadSurveys implements LoadSurveys {
