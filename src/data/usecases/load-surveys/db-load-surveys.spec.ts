@@ -50,4 +50,11 @@ describe('DbLoadSurveys Usecase', () => {
     await sut.load()
     expect(loadAll).toHaveBeenCalled()
   })
+
+  it('Should return a surveys list on success', async () => {
+    const { sut } = makeSut()
+
+    const surveys = await sut.load()
+    expect(surveys).toEqual(makeSurveyEntities())
+  })
 })
