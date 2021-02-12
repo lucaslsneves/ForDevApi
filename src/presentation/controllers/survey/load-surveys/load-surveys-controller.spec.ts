@@ -1,7 +1,7 @@
 import MockDate from 'mockdate'
 import { LoadSurveys, SurveyEntity } from './load-surveys-protocols'
 import { LoadSurveysController } from './load-surveys-controller'
-import { ok } from '../../../helpers/http-helpers'
+import { ok, serverError } from '../../../helpers/http-helpers'
 const makeSurveyEntities = (): SurveyEntity[] => [
   {
     id: 'any_id',
@@ -74,5 +74,13 @@ describe('LoadSurveys Controller', () => {
 
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(ok(makeSurveyEntities()))
+  })
+
+  it('Should return 500 on fails', async () => {
+    const { sut, loadSurveysStub } = makeSut()
+    jest.spyOn(loadSurveysStub, 'load').mockReturnValueOnce(
+      new Promise((resolve, reject) => reject(new Error())))
+    const httpResponse = await sut.handle({})
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
