@@ -1,7 +1,7 @@
-import { SurveyEntity } from '../../../../domain/entities/survey-entity'
-import { LoadSurveysController } from './load-surveys-controller'
-import { LoadSurveys } from './load-surveys-protocols'
 import MockDate from 'mockdate'
+import { LoadSurveys, SurveyEntity } from './load-surveys-protocols'
+import { LoadSurveysController } from './load-surveys-controller'
+import { ok } from '../../../helpers/http-helpers'
 const makeSurveyEntities = (): SurveyEntity[] => [
   {
     id: 'any_id',
@@ -60,5 +60,19 @@ describe('LoadSurveys Controller', () => {
     const loadSurveysSpy = jest.spyOn(loadSurveysStub, 'load')
     sut.handle({})
     expect(loadSurveysSpy).toHaveBeenCalled()
+  })
+
+  it('Should call LoadSurveys', async () => {
+    const { sut, loadSurveysStub } = makeSut()
+    const loadSurveysSpy = jest.spyOn(loadSurveysStub, 'load')
+    await sut.handle({})
+    expect(loadSurveysSpy).toHaveBeenCalled()
+  })
+
+  it('Should return 200 on success', async () => {
+    const { sut } = makeSut()
+
+    const httpResponse = await sut.handle({})
+    expect(httpResponse).toEqual(ok(makeSurveyEntities()))
   })
 })
